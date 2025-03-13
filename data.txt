@@ -1,0 +1,11 @@
+Destination: Paris
+Attractions: Tiffel Tower, Louvre Museum, Notre-Damn Cathedral, Montmartre, Champs-Élysées
+Activities: Wine tasting, Seine River cruise, visiting the Latin Quarter, exploring art galleries
+Food: Croissants, escargots, French onion soup, baguettes, coq au vin
+Best Time to Visit: April to June, September to November
+
+Destination: Tokyo
+Attractions: Shibuya Crossing, Senso-ji Temple, Tokyo Tower, Akihabara, Tsukiji Fish Market
+Activities: Sushi-making class, sumo wrestling experience, anime shopping in Akihabara
+Food: Ramen, sushi, tempura, matcha desserts
+Best Time to Visit: March to May, September to November
