@@ -56,8 +56,10 @@ def generate_rag_travel_plan(answers: Dict[str, str]) -> Dict[str, Any]:
     messages = [
         SystemMessage(content="You are an expert travel planner."),
         HumanMessage(content=f"""
-            Based on the following preferences, generate a 3-day detailed travel plan in Bangladesh.
+            Based on the following preferences, generate a 3-day travel plan in Bangladesh.
+            There can be multiple (activity, description, time) in each itinerary. 
             Ensure the output strictly follows this JSON format:
+            ```
             {{
               "destination": "Bangladesh",
               "duration": 3,
@@ -73,6 +75,8 @@ def generate_rag_travel_plan(answers: Dict[str, str]) -> Dict[str, Any]:
                 "localTransport": ["", "", ""]
               }}
             }}
+            ```
+            Only return valid JSON. Do not include extra text or explanations.
             
             Preferences:
             {user_preferences}
@@ -89,15 +93,57 @@ def generate_rag_travel_plan(answers: Dict[str, str]) -> Dict[str, Any]:
         itinerary_json = json.loads(response)
         return itinerary_json
     except json.JSONDecodeError:
-        return {"error": "Invalid JSON response from the model. Try refining the prompt."}
+        print ("Invalid JSON detected. Retrying with stricter enforcement...")
+        
+        # Second attempt with a more structured re-prompt
+        messages.append(HumanMessage(content="Your last response was not valid JSON. Please strictly return only the JSON structure as specified."))
+
+        response = llm.invoke(messages).content
+
+        try:
+            return json.loads(response)
+        except json.JSONDecodeError:
+            print ("Invalid JSON detected. Retrying with stricter enforcement...")
+
+            # Third attempt with a more structured re-prompt
+            messages.append(HumanMessage(content="Your last response was not valid JSON. Please strictly return only the JSON structure as specified."))
+
+            response = llm.invoke(messages).content
+
+            try:
+                return json.loads(response)
+            except json.JSONDecodeError:
+                print ("Invalid JSON detected. Retrying with stricter enforcement...")
+
+                # Fourth attempt with a more structured re-prompt
+                messages.append(HumanMessage(content="Your last response was not valid JSON. Please strictly return only the JSON structure as specified."))
+
+                response = llm.invoke(messages).content
+
+                try:
+                    return json.loads(response)
+                except json.JSONDecodeError:
+                    print ("Invalid JSON detected. Retrying with stricter enforcement...")
+
+                    # Fifth attempt with a more structured re-prompt
+                    messages.append(HumanMessage(content="Your last response was not valid JSON. Please strictly return only the JSON structure as specified."))
+
+                    response = llm.invoke(messages).content
+
+                    try:
+                        return json.loads(response)
+                    except json.JSONDecodeError:
+                        return {"error": "Invalid JSON response from the model after retrying 5 times. Try refining the prompt."}
+
 
 # FastAPI endpoint to receive frontend requests
-@app.post("/generate-travel-plan/")
+@app.post("/generate/")
 async def generate_travel_plan(request: TravelRequest):
     # Convert list format into dictionary format
     answers_dict = {item.question: item.answer for item in request.answers}
 
     # Generate travel plan
     travel_plan = generate_rag_travel_plan(answers_dict)
+    print(travel_plan)
 
     return travel_plan
