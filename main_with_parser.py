@@ -25,17 +25,21 @@ llm = ChatOpenAI(openai_api_key=openai_api_key, model_name="gpt-4")
 embedding_model = OpenAIEmbeddings(openai_api_key=openai_api_key)
 vector_store = Chroma(persist_directory="./travel_db", embedding_function=embedding_model)
 
-# Load travel data into vector store
-def load_travel_data(file_path, vector_store):
-    loader = TextLoader(file_path)
-    documents = loader.load()
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-    docs = text_splitter.split_documents(documents)
-    vector_store.add_documents(docs)
+# Loading travel data into vector store
+def load_multiple_texts(data_folder: str, vector_store):
+    files = glob.glob(f"{data_folder}/*.txt")
 
-# Load travel data from file
-travel_data_file = "data.txt"
-load_travel_data(travel_data_file, vector_store)
+    for file_path in files:
+        loader = TextLoader(file_path)
+        documents = loader.load()
+
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+        docs = text_splitter.split_documents(documents)
+
+        vector_store.add_documents(docs)
+
+# Loading the folder
+load_multiple_texts("travel_data", vector_store)
 
 # Define the output schema
 class ItineraryItem(BaseModel):
