@@ -104,7 +104,7 @@ def generate_rag_travel_plan(answers: Dict[str, str]) -> Dict[str, Any]:
         itinerary_json = json.loads(response)
         return itinerary_json
     except json.JSONDecodeError:
-        print ("Invalid JSON detected. Retrying with stricter enforcement...")
+        #print ("Invalid JSON detected. Retrying with stricter enforcement...")
         
         # Second attempt with a more structured re-prompt
         messages.append(HumanMessage(content="Your last response was not valid JSON. Please strictly return only the JSON structure as specified."))
@@ -114,7 +114,7 @@ def generate_rag_travel_plan(answers: Dict[str, str]) -> Dict[str, Any]:
         try:
             return json.loads(response)
         except json.JSONDecodeError:
-            print ("Invalid JSON detected. Retrying with stricter enforcement...")
+            #print ("Invalid JSON detected. Retrying with stricter enforcement...")
 
             # Third attempt with a more structured re-prompt
             messages.append(HumanMessage(content="Your last response was not valid JSON. Please strictly return only the JSON structure as specified."))
@@ -124,7 +124,7 @@ def generate_rag_travel_plan(answers: Dict[str, str]) -> Dict[str, Any]:
             try:
                 return json.loads(response)
             except json.JSONDecodeError:
-                print ("Invalid JSON detected. Retrying with stricter enforcement...")
+                #print ("Invalid JSON detected. Retrying with stricter enforcement...")
 
                 # Fourth attempt with a more structured re-prompt
                 messages.append(HumanMessage(content="Your last response was not valid JSON. Please strictly return only the JSON structure as specified."))
@@ -134,7 +134,7 @@ def generate_rag_travel_plan(answers: Dict[str, str]) -> Dict[str, Any]:
                 try:
                     return json.loads(response)
                 except json.JSONDecodeError:
-                    print ("Invalid JSON detected. Retrying with stricter enforcement...")
+                    #print ("Invalid JSON detected. Retrying with stricter enforcement...")
 
                     # Fifth attempt with a more structured re-prompt
                     messages.append(HumanMessage(content="Your last response was not valid JSON. Please strictly return only the JSON structure as specified."))
