@@ -62,13 +62,18 @@ def generate_rag_travel_plan(answers: Dict[str, str]) -> Dict[str, Any]:
     messages = [
         SystemMessage(content="You are an expert travel planner."),
         HumanMessage(content=f"""
-            Based on the following preferences, generate a 3-day travel plan in Bangladesh.
+            Based on the following preferences, generate travel plan in Bangladesh.
+            The number of days you need to plan for is included in the Preferences part.
             There can be multiple (activity, description, time) in each itinerary. 
+            Each itinerary should include:
+            - `activity`: A brief name of the activity (e.g., "Hiking", "Historical Tour").
+            - `description`: A **detailed description** including place names and what the traveler can expect to see or do.
+            - `time`: Approximate time of day (e.g., Morning, Afternoon, Evening, Night).
             Ensure the output strictly follows this JSON format:
             ```
             {{
               "destination": "Bangladesh",
-              "duration": 3,
+              "duration": ,
               "travelPlan": [
                 {{ "day": 1, "itinerary": [ {{ "activity": "", "description": "", "time": "" }} ] }},
                 {{ "day": 2, "itinerary": [ {{ "activity": "", "description": "", "time": "" }} ] }},
